@@ -4,6 +4,7 @@ import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
 import Video from "./Video";
 import Link from "next/link";
+import { Post } from "@prisma/client";
 
 interface FileDetailsResponse {
   width: number;
@@ -14,8 +15,8 @@ interface FileDetailsResponse {
   customMetadata?: { sensitive: boolean };
 }
 
-const Post = async ({ type }: { type?: "status" | "comment" }) => {
- 
+
+const Post = async ({ type, post }: { type?: "status" | "comment" , post: Post}) => {
   // FETCH POST MEDIA
 
   // const getFileDetails = async (
