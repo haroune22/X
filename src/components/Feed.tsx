@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma";
+import { prisma } from "@/lib/prisma";
 import Post from "./Post";
 
 const Feed = async () => {

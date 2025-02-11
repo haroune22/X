@@ -1,4 +1,4 @@
-import { imagekit } from "@/utils";
+import { imagekit } from "@/lib/utils";
 import Image from "./Image";
 import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
