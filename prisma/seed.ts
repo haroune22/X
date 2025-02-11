@@ -11,6 +11,7 @@ async function main() {
         id: `user${i}`,
         email: `user${i}@example.com`,
         username: `user${i}`,
+        password: `password${i}`,
         displayName: `User ${i}`,
         bio: `Hi I'm user${i}. Welcome to my profile!`,
         location: `USA`,
