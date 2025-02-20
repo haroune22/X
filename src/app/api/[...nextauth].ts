@@ -35,7 +35,7 @@ export const authOptions: AuthOptions = {
                     throw new Error("User not found");
                 }
 
-                const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+                const isPasswordValid = bcrypt.compareSync(credentials.password, user.password);
                 if (!isPasswordValid) {
                     throw new Error("Incorrect password");
                 }
