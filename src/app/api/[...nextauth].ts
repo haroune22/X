@@ -23,25 +23,29 @@ export const authOptions: AuthOptions = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                if (!credentials) {
-                    throw new Error("Credentials not provided");
+                try {
+                    if (!credentials?.email || !credentials?.password) {
+                        throw new Error("Missing email or password");
+                    }
+
+                    const user = await prisma.user.findUnique({
+                        where: { email: credentials.email },
+                    });
+
+                    if (!user) {
+                        throw new Error("User not found");
+                    }
+
+                    const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+                    if (!isPasswordValid) {
+                        throw new Error("Incorrect password");
+                    }
+
+                    return { id: user.id, email: user.email, name: user.username };
+                } catch (error) {
+                    console.error("Authorize error:", error);
+                    throw new Error("Login failed: " + (error instanceof Error ? error.message : "Unknown error"));
                 }
-
-                const user = await prisma.user.findUnique({
-                    where: { email: credentials.email },
-                });
-
-                if (!user) {
-                    throw new Error("User not found");
-                }
-
-                const isPasswordValid = bcrypt.compareSync(credentials.password, user.password);
-                if (!isPasswordValid) {
-                    throw new Error("Incorrect password");
-                }
-
-                // ✅ Only return user ID
-                return { id: user.id };
             },
         }),
     ],
@@ -49,7 +53,6 @@ export const authOptions: AuthOptions = {
         strategy: "jwt",
     },
     callbacks: {
-        // ✅ Store only `id` in the JWT token
         async jwt({ token, user }: { token: JWT; user?: { id: string } }) {
             if (user) {
                 token.id = user.id;
@@ -58,7 +61,7 @@ export const authOptions: AuthOptions = {
         },
         // ✅ Attach `id` from JWT token to session
         async session({ session, token }: { session: Session; token: JWT }) {
-            session.user.id = token.id as string; // Make sure ID is properly assigned
+            session.user.id = token.id as string;
             return session;
         },
     },

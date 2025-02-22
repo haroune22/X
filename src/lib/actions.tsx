@@ -1,6 +1,6 @@
 "use server";
 
-import { imagekit } from "./lib/utils";
+import { imagekit } from "./utils";
 
 export const shareAction = async (
   formData: FormData,
